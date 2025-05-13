@@ -1,0 +1,17 @@
+{{template "base" .}}
+
+{{define "content"}}
+<body>
+  <h1>Work Time Clock</h1>
+  <button onclick="clockIn()">Clock In</button>
+  <button onclick="clockOut()">Clock Out</button>
+  <button onclick="exportCSV()">Download CSV</button>
+
+  <div class="log" id="logContainer">
+    <h2>Log</h2>
+    <div id="log"></div>
+  </div>
+
+</body>
+
+{{end}}

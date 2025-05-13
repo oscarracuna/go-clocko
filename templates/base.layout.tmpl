@@ -1,0 +1,70 @@
+{{define "base"}}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Clock'o</title>
+
+        <script>
+    function getFormattedTime() {
+      const now = new Date();
+      return now.toLocaleString();
+    }
+
+    function updateLogDisplay() {
+      const logContainer = document.getElementById("log");
+      const logs = JSON.parse(localStorage.getItem("timeLogs")) || [];
+      logContainer.innerHTML = logs
+        .map(entry => `<div class="log-entry">${entry}</div>`)
+        .join("");
+    }
+
+    function addLogEntry(action) {
+      const time = getFormattedTime();
+      const entry = `${action} at ${time}`;
+      const logs = JSON.parse(localStorage.getItem("timeLogs")) || [];
+      logs.unshift(entry);
+      localStorage.setItem("timeLogs", JSON.stringify(logs));
+      updateLogDisplay();
+    }
+
+    function clockIn() {
+      addLogEntry("Clocked In");
+    }
+
+    function clockOut() {
+      addLogEntry("Clocked Out");
+    }
+
+    updateLogDisplay();
+
+    function exportCSV() {
+  const logs = JSON.parse(localStorage.getItem("timeLogs")) || [];
+  if (logs.length === 0) {
+    alert("No log data to export.");
+    return;
+  }
+
+  const csvContent = "data:text/csv;charset=utf-8,"
+    + logs.map((entry, index) => `${index + 1},"${entry}"`).join("\n");
+
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "timesheet.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+  </script>
+
+      {{block "css" .}}
+      {{end}}
+
+    {{block "content" .}}
+
+    {{end}}
+
+{{end}}
